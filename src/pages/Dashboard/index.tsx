@@ -31,7 +31,7 @@ const Dashboard = () => {
                     </h1>
 
                     <Link to="/login" className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg transition">
-                        Login
+                        Logout
                     </Link>
                 </div>
             </header>
