@@ -1,4 +1,5 @@
-import api from "../http/axios";
+import api from "../axios";
+
 
 const authService = {
   register: async (data: any) => {

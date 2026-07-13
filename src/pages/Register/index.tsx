@@ -3,7 +3,8 @@ import Input from '../../components/common/Input/Input';
 import { registerForm } from '../../config/forms/register-form';
 import { Link } from 'react-router-dom';
 import { useNavigate } from "react-router-dom";
-import authService from '../../services/authService';
+import { toast } from 'sonner';
+import authService from '../../http/services/authService';
 
 
 const Register = () => {
@@ -26,17 +27,13 @@ const Register = () => {
     e.preventDefault();
 
     try {
-      console.log(registerData);
-
       const response = await authService.register(registerData);
-
-      console.log(response.data);
-
       if (response?.data?.success) {
+        toast.success("Registration successful")
         navigate("/login")
       }
-    } catch (error) {
-      console.log(error);
+    } catch (error: any) {
+      toast.error(error?.response?.data?.message || "Something went wrong");
     }
   };
   return (

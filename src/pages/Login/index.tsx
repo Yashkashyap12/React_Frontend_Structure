@@ -1,34 +1,48 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import authService from "../../services/authService";
+import { toast } from "sonner";
+import authService from "../../http/services/authService";
+import { setToken } from "../../utils/helpers";
 
 const Login = () => {
   const navigate = useNavigate();
+
+  const [loading, setLoading] = useState(false);
+
   const [loginData, setLoginData] = useState({
     email: "",
-    password: ""
-  })
+    password: "",
+  });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setLoginData({
       ...loginData,
-      [e.target.name]: e.target.value
-    })
-  }
+      [e.target.name]: e.target.value,
+    });
+  };
 
   const handleSubmit = async (e: React.SyntheticEvent<HTMLFormElement>) => {
     e.preventDefault();
+
     try {
-      const response = await authService.login(loginData)
+      setLoading(true);
+
+      const response = await authService.login(loginData);
 
       if (response?.data?.success) {
-        localStorage.setItem('token', response.data.token);
-        navigate('/dashboard');
+        setToken(response.data.token);
+
+        toast.success("Login successful");
+
+        navigate("/dashboard");
       }
-    } catch (error) {
-      console.log(error)
+    } catch (error: any) {
+      toast.error(error?.response?.data?.message || "Something went wrong");
+    } finally {
+      setLoading(false);
     }
-  }
+  };
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4">
       <div className="w-full max-w-md bg-white rounded-2xl shadow-lg p-8">
@@ -45,10 +59,11 @@ const Login = () => {
             <label className="block text-sm font-medium text-gray-700 mb-2">
               Email
             </label>
+
             <input
               type="email"
               name="email"
-              value={loginData?.email}
+              value={loginData.email}
               onChange={handleChange}
               placeholder="Enter your email"
               className="w-full rounded-lg border border-gray-300 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
@@ -60,10 +75,11 @@ const Login = () => {
             <label className="block text-sm font-medium text-gray-700 mb-2">
               Password
             </label>
+
             <input
               type="password"
               name="password"
-              value={loginData?.password}
+              value={loginData.password}
               onChange={handleChange}
               placeholder="Enter your password"
               className="w-full rounded-lg border border-gray-300 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
@@ -73,9 +89,10 @@ const Login = () => {
 
           <button
             type="submit"
-            className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 rounded-lg transition"
+            disabled={loading}
+            className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 rounded-lg transition disabled:opacity-50"
           >
-            Login
+            {loading ? "Logging in..." : "Login"}
           </button>
         </form>
 

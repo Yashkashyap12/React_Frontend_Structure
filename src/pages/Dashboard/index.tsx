@@ -1,8 +1,10 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
-import authService from "../../services/authService";
+import { Link, useNavigate } from "react-router-dom";
+import { toast } from "sonner";
+import authService from "../../http/services/authService";
 
 const Dashboard = () => {
+    const navigate = useNavigate();
     const [user, setUser] = useState({
         id: "",
         name: "",
@@ -18,21 +20,40 @@ const Dashboard = () => {
         }
     }
 
-    useEffect(()=>{
+    useEffect(() => {
         getProfile();
-    },[])
+    }, [])
+
+    const handleLogout = () => {
+        try {
+            localStorage.removeItem('token');
+            toast.success("Logout successful")
+            navigate('/login')
+        } catch (error) {
+
+        }
+    }
     return (
         <div className="min-h-screen bg-gray-100">
             {/* Header */}
-            <header className="bg-white shadow-sm">
+            <header className="bg-white shadow">
                 <div className="max-w-6xl mx-auto flex items-center justify-between px-6 py-4">
                     <h1 className="text-2xl font-bold text-gray-800">
                         Dashboard
                     </h1>
 
-                    <Link to="/login" className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg transition">
-                        Logout
-                    </Link>
+                    <div className="flex gap-3">
+                        <Link
+                            to="/login"
+                            className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg"
+                        >
+                            Login
+                        </Link>
+
+                        <button onClick={handleLogout} className="bg-red-500 cursor-pointer hover:bg-red-600 text-white px-4 py-2 rounded-lg">
+                            Logout
+                        </button>
+                    </div>
                 </div>
             </header>
             {/* Content */}
@@ -70,7 +91,7 @@ const Dashboard = () => {
                     </div>
                 </div>
             </main>
-        </div>
+        </div >
     );
 };
 
