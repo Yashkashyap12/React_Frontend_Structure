@@ -3,7 +3,7 @@ import api from "../axios";
 import { removeToken } from "../../utils/helpers";
 
 const publicRoutes = ["/auth/login", "/auth/register"];
-
+let isRedirecting = false;
 api.interceptors.response.use(
   (response) => response,
 
@@ -12,7 +12,8 @@ api.interceptors.response.use(
       error?.config?.url?.includes(route),
     );
 
-    if (error.response?.status === 401 && !isPublicRoute) {
+    if (error.response?.status === 401 && !isPublicRoute && !isRedirecting) {
+      isRedirecting = true;
       removeToken();
 
       toast.error("Session Expired");

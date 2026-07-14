@@ -30,7 +30,8 @@ const Dashboard = () => {
             toast.success("Logout successful")
             navigate('/login')
         } catch (error) {
-
+            console.log(error)
+            toast.error("Logout Failed")
         }
     }
     return (
