@@ -1,49 +1,40 @@
-type FormFieldName =
-  | "name"
-  | "email"
-  | "password"
-  | "confirmPassword";
+import type { RegisterFormData } from "../../schemas/authSchema";
 
-export interface FormField {
-  id: number;
-  name: FormFieldName;
+interface FormField {
+  name: keyof RegisterFormData;
   label: string;
   type: "text" | "email" | "password" | "number";
   placeholder: string;
-  required: boolean;
+  required?: boolean;
 }
 
 export const registerForm: FormField[] = [
   {
-    id: 1,
     name: "name",
-    label: "Full Name",
+    label: "Name",
     type: "text",
-    placeholder: "Enter Full Name",
+    placeholder: "Enter your name",
     required: true,
   },
   {
-    id: 2,
     name: "email",
     label: "Email",
     type: "email",
-    placeholder: "Enter Email",
+    placeholder: "Enter your email",
     required: true,
   },
   {
-    id: 3,
     name: "password",
     label: "Password",
     type: "password",
-    placeholder: "Enter Password",
+    placeholder: "Enter password",
     required: true,
   },
   {
-    id: 4,
     name: "confirmPassword",
     label: "Confirm Password",
     type: "password",
-    placeholder: "Enter Confirm Password",
+    placeholder: "Confirm password",
     required: true,
   },
 ];
